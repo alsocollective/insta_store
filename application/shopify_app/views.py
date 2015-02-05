@@ -13,15 +13,15 @@ def login(request):
 
 	# If the ${shop}.myshopify.com address is already provided in the URL,
 	# just skip to authenticate
-	print "hello this is bohdan"
 	if request.REQUEST.get('shop'):
 		return authenticate(request)
 	return render_to_response('shopify_app/login.html', {},context_instance=RequestContext(request))
 
 def authenticate(request):
 	shop = request.REQUEST.get('shop')
-	print request
 	if shop:
+		shopify.Session.setup(api_key=settings.SHOPIFY_API_KEY,secret=settings.SHOPIFY_API_SECRET)		
+		
 		scope = settings.SHOPIFY_API_SCOPE
 		redirect_uri = request.build_absolute_uri(reverse('shopify_app.views.finalize'))
 		permission_url = shopify.Session(shop.strip()).create_permission_url(scope, redirect_uri)
