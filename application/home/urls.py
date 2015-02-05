@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'home.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-	url(r'^', include('shopify_app.urls'), name='root_path'),
+    url(r'^login/', include('shopify_app.urls')),   
     url(r'^admin/', include(admin.site.urls)),
 )

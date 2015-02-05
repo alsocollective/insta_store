@@ -49,3 +49,9 @@ def finalize(request):
 	# response = redirect(_return_address(request))
 	# request.session.pop('return_to', None)
 	return response
+
+def logout(request):
+    request.session.pop('shopify', None)
+    messages.info(request, "Successfully logged out.")
+
+    return redirect(reverse('shopify_app.views.login'))
