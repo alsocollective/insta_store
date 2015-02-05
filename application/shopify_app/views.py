@@ -1,4 +1,6 @@
 from django.shortcuts import render_to_response, redirect
+from django.http import HttpResponse
+
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -31,18 +33,20 @@ def authenticate(request):
 
 def finalize(request):
 	shop_url = request.REQUEST.get('shop')
-	print request
-	# try:
-	# 	shopify_session = shopify.Session(shop_url)
-	# 	print shopify_session.request_token(request.REQUEST)
-	# 	request.session['shopify'] = {
-	# 		"shop_url": shop_url,
-	# 		"access_token": shopify_session.request_token(request.REQUEST)
-	# 	}
+	token = ""
+	try:
+		shopify_session = shopify.Session(shop_url)
+		token = shopify_session.request_token(request.REQUEST)
+		request.session['shopify'] = {
+			"shop_url": shop_url,
+			"access_token": token
+		}
 
-	# except Exception:
-	# 	messages.error(request, "Could not log in to Shopify store.")
-	# 	return redirect(reverse('shopify_app.views.login'))
+	except Exception:
+		messages.error(request, "Could not log in to Shopify store.")
+		return redirect(reverse('shopify_app.views.login'))
+
+	return HttpResponse(shopify_session.request_token(request.REQUEST))
 
 	# messages.info(request, "Logged in to shopify store.")
 
